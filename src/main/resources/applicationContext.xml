@@ -1,0 +1,49 @@
+<!-- applicationContext.xml -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- User Entity-->
+    <bean id="user" class="com.labs.day1.dao.User">
+        <constructor-arg type="int" value="10"/>
+        <constructor-arg type="String" value="Hamada1"/>
+    </bean>
+
+    <!-- User Service-->
+    <bean id="userservice" class="com.labs.day1.service.UserServiceImpl" >
+        <constructor-arg ref="userarraydao"/>
+    </bean>
+
+    <!-- User Array  Dao-->
+    <bean name="userarraydao" class="com.labs.day1.dao.UserDaoArrayListImpl"/>
+
+    <!-- User Stack Dao-->
+    <bean name="userstackdao" class="com.labs.day1.dao.UserDaoStackImpl"/>
+
+    <!-- Concrete factory bean-->
+    <bean id="factory" class="com.labs.day1.service.UserServiceFactory"/>
+
+    <!--Instance of Service by static factory - stackdao-->
+    <bean id="userServiceStaticFactory" class="com.labs.day1.service.UserServiceStaticFactory" factory-method="createService">
+        <constructor-arg ref="userstackdao" />
+    </bean>
+
+    <!--Instance of Service by concrete factory - arraydao-->
+    <bean id="userServiceByFactory" factory-bean="factory" factory-method="createService">
+        <constructor-arg ref="userarraydao"/>
+    </bean>
+
+
+    <bean id="b" class="com.labs.day1.cyclicdep.B">
+        <property name="a" ref="a"/>
+    </bean>
+
+    <bean id="a" class="com.labs.day1.cyclicdep.A" >
+        <property name="b" ref="b"/>
+    </bean>
+
+
+</beans>
